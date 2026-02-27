@@ -11,7 +11,10 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <algorithm>
 #include "datahandle.cpp"
+#include "math.cpp"
+#include "abbrevations.cpp"
  
 
 
@@ -56,7 +59,6 @@ std::vector<int>			top_res_counts;
 	for (int i = lines.size() -1 ; i >= 0; i-- ){			
 			//dh::merge_vecs(top_residues, dh::iss(lines[i])); 
 			
-dh::print(lines[i]);
 			std::vector <std::string> vec= dh::iss(lines[i]);
 			top_residues.insert(top_residues.end(), vec.begin(), vec.end());
 
@@ -128,14 +130,14 @@ double overlap_hist(std::string hist1, std::string hist2){
 	auto [x_hist1,y_hist1] 	  = dh::get_x_y(hist1);
 	auto [x_hist2,y_hist2] 	  = dh::get_x_y(hist2);	
 	int starting_position  	  = dh::get_common_min_val(x_hist1,x_hist2);
-	double normalization_area = dh::sum(y_hist1)+dh::sum(y_hist2);
+	double normalization_area = stat::sum(y_hist1)+stat::sum(y_hist2);
 	double overlap_area    	  = 0;
 	if(x_hist1.empty() || x_hist2.empty() || y_hist1.empty() || y_hist1.empty()){
-		dh::print("-1000");
+		abb::print("-1000");
 		return -1000;
 	}
 	else if(x_hist1[0]>x_hist2[0]){
-		dh::print("-1000");
+		abb::print("-1000");
 		return -1000;
 	}
 	for(int i =starting_position; i<x_hist1.size(); i++){
@@ -148,7 +150,7 @@ double overlap_hist(std::string hist1, std::string hist2){
 		}
 	}
 	
-	dh::print(static_cast<int>(2*overlap_area/(normalization_area)*100));
+	abb::print(static_cast<int>(2*overlap_area/(normalization_area)*100));
 	return 2*overlap_area/(normalization_area);
 }
 
@@ -203,9 +205,76 @@ std::vector<double> monolayer_z_coordinates(2);
 
                         }
                 }
-		dh::show_dou(monolayer_z_coordinates);
+		abb::show_dou(monolayer_z_coordinates);
         return monolayer_z_coordinates;
-
 }
+
+
+
+void function_composition(std::string f_x,std::string g_x){
+
+auto [fx,fy] 	  = dh::get_x_y(f_x);
+auto [gx,gy] 	  = dh::get_x_y(g_x);
+
+fx.clear();
+gx.clear();
+
+
+
+int vector_size = gy.size();
+
+// Create indices 0..n-1
+std::vector<int> idx(vector_size);
+for (int i = 0; i< vector_size; i++) idx[i]=i;
+
+
+//Sort indices according to gy values
+std::sort(idx.begin(), idx.end(), [&gy](int i1, int i2){return gy[i1]<gy[i2];});
+
+
+std::vector<double> sorted_gy(vector_size);
+std::vector<double> permuted_fy(vector_size);
+
+for (int i = 0; i < vector_size; ++i) {
+       sorted_gy[i]   = gy[idx[i]];
+       permuted_fy[i] = fy[idx[i]];
+}
+//hier gehts weiter
+
+
+std::vector<double> subvector_gy;
+std::vector<double> subvector_fy;
+
+
+for (int i = 1; i < vector_size;i++){
+	if(i==vector_size-1){
+		std::string filename = "../U_d/U_"+std::to_string(subvector_gy[0])+".xvg";
+		dh::write_y_x_file( subvector_fy, subvector_gy, filename);	
+		}
+	else if (sorted_gy[i] == sorted_gy[i-1]){
+		subvector_gy.push_back(sorted_gy[i]);
+		subvector_fy.push_back(permuted_fy[i]);
+	}	
+	else{
+	std::string filename = "../U_d/U_"+std::to_string(sorted_gy[i-1])+".xvg";
+	dh::write_y_x_file( subvector_fy, subvector_gy, filename);
+	subvector_fy.clear();
+	subvector_gy.clear();
+	
+	subvector_gy.push_back(sorted_gy[i]);
+	subvector_fy.push_back(permuted_fy[i]);
+	}
+}
+}
+
+
+
+
+
+
+
+
+
+
 
 #endif
