@@ -3,6 +3,8 @@
 
 #include <sstream>
 #include <fstream>
+#include <vector>
+
 namespace dh{
 
 std::vector<std::string> iss(std::string str){
@@ -17,7 +19,7 @@ std::vector<std::string> iss(std::string str){
 
 
 
-std::vector<std::string> grofile_to_vector(const std::string& in_gro){
+std::vector<std::string> whole_file_to_vector(const std::string& in_gro){
            std::ifstream infile(in_gro);           //opens inputfile
            std::vector<std::string> written_file;                  //vector containing whole file
            std::string line;

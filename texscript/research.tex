@@ -1,0 +1,96 @@
+\documentclass[fontsize=12pt, paper=a4]{scrartcl}
+\usepackage[onehalfspacing]{setspace}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{float}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{newfloat}
+\usepackage{wrapfig}
+\usepackage{longtable}
+ \usepackage{amsmath}
+\usepackage{caption}
+\captionsetup{justification=RaggedRight,singlelinecheck=false}%caption is left align
+\usepackage[font=smaller]{caption}
+\DeclareFloatingEnvironment[
+fileext = los,
+listname = {List of Schemes},
+name = Scheme]{scheme}
+\usepackage[style=chem-acs,backend=bibtex,sorting=none]{biblatex}
+\DeclareCiteCommand{\supercite}[\mkbibsuperscript]%
+{\usebibmacro{cite:init}%
+	\let\multicitedelim\supercitedelim%
+	\iffieldundef{prenote}%
+	{}%
+	{\BibliographyWarning{Ignoring prenote argument}}%
+	\iffieldundef{postnote}%
+	{}%
+	{\BibliographyWarning{Ignoring postnote argument}}%
+	\bibleftbracket%  HIER DIE OEFFNENDE KLAMMER
+}%
+{\usebibmacro{citeindex}%
+	\usebibmacro{cite:comp}}
+{}%
+{\usebibmacro{cite:dump}%
+	\bibrightbracket%   HIER DIE SCHLIESSENDE KLAMMER
+}%
+\newcommand{\mkbibsuperbrackets}[1]{%
+	\mkbibsuperscript{\mkbibbrackets{#1}}}
+\DefineBibliographyStrings{ngerman}{andothers={et\ al\adddot}}
+\addbibresource{references.bib}
+
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}
+\definecolor{webgreen}{rgb}{0,.5,0}
+\definecolor{webbrown}{rgb}{.6,0,0}
+\definecolor{maroon}{cmyk}{0,0.492,0.41,0.522}
+
+\usepackage[
+unicode,
+backref=true,
+colorlinks=true,
+linktocpage=true,
+linkcolor=maroon, % maroon
+citecolor=webbrown, % webbrown
+urlcolor=webbrown,% webbrown
+]{hyperref}
+
+\begin{document}
+	
+	\begin{titlepage}
+		
+		\centering
+		
+		\scshape \large University of Regensburg		\par
+		\vspace{1.5cm}
+		\scshape \large 
+		----------
+		----------
+		----------		\par
+		\vspace{1.5cm}         \includegraphics[height=5.60cm,width=8.00cm]{Urlogo.PNG} \par
+		\vspace{3cm}
+%		
+		\scshape \large Submitted by		\par
+		\vspace{1.5cm}
+		
+		\scshape \large Wulf Schüllner		\par
+		
+		\vspace{1.5cm}
+		\large \today \par
+		\vspace{2cm}
+		\large Supervisor \\
+		
+		
+			----------
+			----------
+			----------
+			
+	\end{titlepage}
+	\pagenumbering{arabic}
+\tableofcontents
+	\pagebreak
+	
+\section{Introduction}
+
+\end{document}
+
