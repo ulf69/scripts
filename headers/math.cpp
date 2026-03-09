@@ -32,6 +32,7 @@ public:
 			sum+=vec[i];
 		}
 			return sum/n;
+
 	}
 
 
@@ -44,9 +45,29 @@ public:
 		for(int i = 0; i < siz; i++){
 			st += (vec[i]- av)*(vec[i]- av);
 		}
+		
 		return std::sqrt(st/siz);
 	}
+	static double sem(const std::vector<double> vec ){
+		double err = sd(vec);
+		return err/sqrt(vec.size());
+	}
 
+	static double block_av(const std::vector<double> vec, int blocks){
+		int block_size = vec.size()/blocks;
+		std::vector<double> block(block_size);
+		std::vector<double> block_sd;
+		
+		for(int b =0; b< blocks; b++){
+			for(int i = 0 ;i < block_size; i++){
+				block[i]=vec[i+b*block_size];
+			}
+			block_sd.push_back(sd(block));
+		}
+
+		
+		return average(block_sd)/sqrt(block_sd.size());	
+	}
 
 	static double integrator(std::vector<double> x, std::vector<double> y){
 		double sum = 0;

@@ -26,6 +26,12 @@ void append_y_x_errors(double fx, double dfx, double x, double dx,  std::string 
 		outfile<<x<<'\t'<<dx<<'\t'<<fx<<'\t'<<dfx<<'\n';
 	    outfile.close();
 }
+void append_y_x_dy(double fx, double dfx, double x,   std::string filename){
+		std::ofstream outfile(filename, std::ios::app);	
+		outfile<<x<<'\t'<<fx<<'\t'<<dfx<<'\n';
+	    outfile.close();
+}
+
 
 void write_subvectors(std::vector<double> sorted_gy, std::vector<double> permuted_fy, std::string out){
 
