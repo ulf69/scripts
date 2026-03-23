@@ -247,8 +247,8 @@ void multiply_box(std::string box){
 				std::string residue_name = boxfile[k].substr(5,5);
 				std::string atom_name = boxfile[k].substr(10,5);
 				int atom_number = stoi(boxfile[k].substr(15,5))+step*atom_in_starting_box;
-				double x_coord = std::stod(boxfile[k].substr(20,8)) + x_shift[i]*box_x*0.7 ;
-				double y_coord = std::stod(boxfile[k].substr(28,8)) + y_shift[i]*box_y*0.7;
+				double x_coord = std::stod(boxfile[k].substr(20,8)) + x_shift[i]*box_x ;
+				double y_coord = std::stod(boxfile[k].substr(28,8)) + y_shift[i]*box_y;
 				double z_coord = std::stod(boxfile[k].substr(36,8));
 
 				
@@ -256,9 +256,10 @@ void multiply_box(std::string box){
 				 
 				outfile<<std::fixed << std::setprecision(3) <<std::string(11-std::to_string(x_coord).size(),' ')<<x_coord<<std::string(11-std::to_string(y_coord).size(),' ')<<y_coord<<std::string(11-std::to_string(z_coord).size(),' ')<<z_coord<<'\n';					
 			}		
+			
 	}
 	
-	outfile << "   " << std::fixed << std::setprecision(5) << box_x+2*box_x*0.7<< "   "<< box_y+box_y*2*0.7<< "   "<< box_z << "\n";
+	outfile << "   " << std::fixed << std::setprecision(5) << box_x+2*box_x<< "   "<< box_y+box_y*2<< "   "<< box_z << "\n";
 	
 	outfile.close();
 }
@@ -276,10 +277,10 @@ void mirror_box_z(std::string box){
 	double box_z = std::stod(boxfile[siz-1].substr(24,10));
 	for(int i = 2; i < siz-1; i++){
 		double z_coord = stod(boxfile[i].substr(36,8))*(-1) + box_z ;
-		outfile	<< boxfile[i].substr(0,36)<<std::string(11-std::to_string(z_coord).size(),' ') <<z_coord<<'\n';	
+		outfile	<<std::fixed << std::setprecision(3)<< boxfile[i].substr(0,36)<<std::string(11-std::to_string(z_coord).size(),' ') <<z_coord<<'\n';	
 	}
     	
-	outfile<<boxfile[siz-1]<<'\n';
+	outfile <<boxfile[siz-1]<<'\n';
 	outfile.close();
 }
 
@@ -304,111 +305,22 @@ void merge_boxes(std::string box1, std::string box2){
 	
 	
 	int siz2 = boxfile2.size();
-	abb::print(siz2);
 	for(int i = 2; i < siz2-1; i++){	
-		int particles_box_2 =  stoi(boxfile2[siz2-2].substr(0,5))+particles;
-		int atoms_box_2     =  stoi(boxfile1[siz2-2].substr(15,5))+atoms;
-	//	abb::print(particles_box_2);
-	//	abb::print(atoms_box_2);
-		outfile	<< particles_box_2<<std::string(5-std::to_string(particles_box_2).size(),' ') << boxfile2[i].substr(5,10) <<atoms_box_2<< std::string(5-std::to_string(atoms_box_2).size(),' ') <<boxfile2[i].substr(20)<< '\n';	
+		
+		int particles_box_2 =  stoi(boxfile2[i].substr(0,5))+particles;
+		int atoms_box_2     =  stoi(boxfile2[i].substr(15,5))+atoms;
+		double new_z		=  stod(boxfile2[i].substr(36,8))+stod(boxfile1[siz1-1].substr(24,7));
+		abb::print(new_z);
+		outfile	<< particles_box_2<<std::string(5-std::to_string(particles_box_2).size(),' ') << boxfile2[i].substr(5,10) <<atoms_box_2<< std::string(5-std::to_string(atoms_box_2).size(),' ') <<boxfile2[i].substr(20,16)<<std::string(11-std::to_string(new_z).size(),' ') <<new_z<< '\n';	
 	}
+
 	double new_box_z = stod(boxfile1[siz1-1].substr(24,7)) + stod(boxfile2[siz2-1].substr(24,7));
-	
-	abb::print(boxfile2[siz1-1].substr(24,7));
-	
-	abb::print(stod(boxfile2[siz1-1].substr(24,7)));
 	
 	outfile<<std::fixed << std::setprecision(5) << boxfile1[siz1-1].substr(0,24)<< new_box_z;
 } 
 };
 
 
-//double overlap_hist(std::string hist1, std::string hist2){
-//
-//	auto [x_hist1,y_hist1] 	  = dh::get_x_y(hist1);
-//	auto [x_hist2,y_hist2] 	  = dh::get_x_y(hist2);	
-//	int starting_position  	  = dh::get_common_min_val(x_hist1,x_hist2);
-//	double normalization_area = stat::sum(y_hist1)+stat::sum(y_hist2);
-//	double overlap_area    	  = 0;
-//	if(x_hist1.empty() || x_hist2.empty() || y_hist1.empty() || y_hist1.empty()){
-//		abb::print("-1000");
-//		return -1000;
-//	}
-//	else if(x_hist1[0]>x_hist2[0]){
-//		abb::print("-1000");
-//		return -1000;
-//	}
-//	for(int i =starting_position; i<x_hist1.size(); i++){
-//		
-//		if(y_hist2[i-starting_position]<y_hist1[i]){
-//			overlap_area+=y_hist2[i-starting_position];
-//		}
-//		else{
-//			overlap_area+=y_hist1[i];
-//		}
-//	}
-//	
-//	abb::print(static_cast<int>(2*overlap_area/(normalization_area)*100));
-//	return 2*overlap_area/(normalization_area);
-//}
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//std::vector<double> get_monolayer_z_coordinates(std::string obs_ervable){
-//
-//std::vector<std::string> observable =      dh::infile_to_vector(obs_ervable);
-//double x_value=0;
-//double maxdens=0;
-//int        count =0;
-//bool start_analysis=false;
-//std::vector<double> monolayer_z_coordinates(2);
-//        for(int i =0; i<observable.size(); i++){
-//                std::istringstream iss(observable[i]);
-//                std::string col;
-//                int j =0;
-//
-//                while(iss>>col){
-//                        j++;
-//						
-//                        if(j%2==1){
-//                                        x_value=stod(col);
-//                                }
-//                        else if(maxdens<stod(col)){
-//                        		if(stod(col)>1){
-//                        			start_analysis=true;
-//            					}
-//                                maxdens=stod(col);
-//
-//                                if(stod(col)>monolayer_z_coordinates[count]){
-//                                        monolayer_z_coordinates[count]=x_value;
-//                                }
-//                        }
-//                                else if(stod(col)==0&&start_analysis==true){
-//                                        if(count==0){
-//                                                maxdens=monolayer_z_coordinates[0]/2;
-//                                        }
-//                                        else{
-//                                                continue;
-//                                        }
-//                                        count = 1;
-//
-//                                }
-//
-//                        }
-//                }
-//		abb::show_dou(monolayer_z_coordinates);
-//        return monolayer_z_coordinates;
-//}
-//
-//
-//
 
-//
+
 #endif

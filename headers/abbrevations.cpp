@@ -2,6 +2,7 @@
 #define abbrevations
 
 #include <iostream>
+#include <vector>
 
 namespace abb{
 template <typename T>
@@ -38,7 +39,20 @@ void show_xy(std::vector<double> array,std::vector<double> array2){
                 print(array2[i]);
         }
 }
+void show_vecvec(std::vector<std::vector<double>> vec){
 
+int i =0;
+	for(int j =0 ; j< vec[i].size();j++){
+		print('\n');
+	for (int i =0; i < vec.size();++i){
+
+				
+			
+				printt(vec[i][j]);
+			
+		}
+	}
+}
 	
 } 
 #endif

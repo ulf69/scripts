@@ -9,22 +9,18 @@
 #include <algorithm>
 
 #include "datahandle.cpp"
+#include "abbrevations.cpp"
 
 class stat 
 {
-private:
-	std::vector<double> vecx;
-	std::vector<double> vecy;
-public:
-	stat(const std::string& filename)
-	{
-		auto result=dh::get_x_y(filename);
-		vecx = std::move(result.first);	
-		vecy = std::move(result.second);	
-	}
-	const std::vector<double>& get_vecx() const { return vecx; }
-	const std::vector<double>& get_vecy() const { return vecy; }
 
+public:
+	std::vector<std::vector<double>> data;
+	stat(const std::string& filename,int col)
+	  :	 data(dh::read_multi_col_file(filename, col))
+	{}	
+	
+	
 	static double average(const std::vector<double> vec){
 		int n = vec.size();
 		double sum =0;
@@ -117,11 +113,54 @@ std::pair<std::vector<double>, std::vector<double>> function_composition(std::ve
 		       permuted_fy[i] = fy[idx[i]];
 		}	
     return std::make_pair(sorted_gy, permuted_fy);
+
+
 		
 }
 
 
+static double overlap_hist(std::string hist1, std::string hist2){
 
+	auto [x_hist1,y_hist1] 	  = dh::get_x_y(hist1);
+	auto [x_hist2,y_hist2] 	  = dh::get_x_y(hist2);	
+	int starting_position  	  = dh::get_common_min_val(x_hist1,x_hist2);
+	double normalization_area = stat::sum(y_hist1)+stat::sum(y_hist2);
+	double overlap_area    	  = 0;
+	if(x_hist1.empty() || x_hist2.empty() || y_hist1.empty() || y_hist1.empty()){
+		abb::print("-1000");
+		return -1000;
+	}
+	else if(x_hist1[0]>x_hist2[0]){
+		abb::print("-1000");
+		return -1000;
+	}
+	for(int i =starting_position; i<x_hist1.size(); i++){
+		
+		if(y_hist2[i-starting_position]<y_hist1[i]){
+			overlap_area+=y_hist2[i-starting_position];
+		}
+		else{
+			overlap_area+=y_hist1[i];
+		}
+	}
+	
+	abb::print(static_cast<int>(2*overlap_area/(normalization_area)*100));
+	return 2*overlap_area/(normalization_area);
+}
+
+static std::vector<double> vec_subtraction(std::vector<double> vec1, std::vector<double> vec2){
+	int vector_size=vec1.size();
+	int vector1_size=vec2.size();
+	std::vector<double> vec_out;
+	if(vector_size-vector1_size!=0){
+				std::cout<<"we have got a problem cap"<<'\n';
+				std::cout<<"vectors have differnt sizes"<<'\n';	
+			}
+			for(int i = 0; i < vector_size;i++){
+				vec_out.push_back(vec1[i]-vec2[i]);
+			}
+		return vec_out;
+}
 
 
 };
