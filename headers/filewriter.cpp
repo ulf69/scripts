@@ -27,6 +27,7 @@ void append_y_x_errors(double fx, double dfx, double x, double dx,  std::string 
 	    outfile.close();
 }
 void append_y_x_dy(double fx, double dfx, double x,   std::string filename){
+		if (std::isnan(fx)){return;}
 		std::ofstream outfile(filename, std::ios::app);	
 		outfile<<x<<'\t'<<fx<<'\t'<<dfx<<'\n';
 	    outfile.close();
