@@ -163,5 +163,29 @@ static std::vector<double> vec_subtraction(std::vector<double> vec1, std::vector
 }
 
 
+static std::pair<std::vector<double>, std::vector<double>> sort_func(std::vector<double> vecx,std::vector<double> vecy ){
+		int sizx = vecx.size();		
+		int sizy = vecy.size();		
+	if(sizx-sizy!=0){
+					std::cout<<"we have got a problem cap"<<'\n';
+					std::cout<<"vectors have differnt sizes"<<'\n';	
+				}	
+		
+		// Create indices 0..n-1
+		std::vector<int> idx(sizx);
+		for (int i = 0; i< sizx; i++) idx[i]=i;
+
+		//Sort indices according to gy values
+		std::sort(idx.begin(), idx.end(), [&vecx](int i1, int i2){return vecx[i1]<vecx[i2];});
+		
+		std::vector<double> sorted_x(sizx);
+		std::vector<double> permuted_y(sizx);
+		for (int i = 0; i < sizx; ++i) {
+		       sorted_x[i]   = vecx[idx[i]];
+		       permuted_y[i] = vecy[idx[i]];
+		}	
+    return std::make_pair(sorted_x, permuted_y);
+}
+
 };
 #endif
