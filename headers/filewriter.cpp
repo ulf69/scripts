@@ -4,9 +4,11 @@
 #include <vector>
 #include <string>
 #include <fstream>
+
+
 namespace fw{
+
 void write_y_x_file(std::vector<double> y, std::vector<double> x, std::string filename){
-	// Open a file for writing
     std::ofstream outfile(filename, std::ios::app);	
 	int vec_size=y.size();
 	for(int i = 0; i < vec_size; i++){
@@ -14,6 +16,11 @@ void write_y_x_file(std::vector<double> y, std::vector<double> x, std::string fi
 	}
     outfile.close();
 }
+
+
+
+
+
 
 void append_y_x(double fx, double x, std::string filename){
     std::ofstream outfile(filename, std::ios::app);	

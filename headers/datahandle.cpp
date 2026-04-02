@@ -70,12 +70,12 @@ std::pair<std::vector<double>, std::vector<double>> get_x_y(std::string in_file)
 
 
 
-std::vector<std::vector<double>> read_multi_col_file(std::string in_file, int col){
+std::vector<std::vector<double>> read_multi_col_file(std::string in_file){ 
 	std::ifstream infile(in_file);          			 //opens inputfile
     std::string line;
     
-    std::vector<std::vector<double>> file(col);
-    
+    std::vector<std::vector<double>> file; 
+    int j = 0;   
     while (std::getline(infile, line)){ //fill vector line per line
     	
        if(line.substr(0,1) == "#" || line.substr(0,1) == "@" ){
@@ -84,10 +84,15 @@ std::vector<std::vector<double>> read_multi_col_file(std::string in_file, int co
        
        else{
      
-               std::vector<std::string> vec = iss(line); 
+               std::vector<std::string> vec = iss(line);
+               
               for(int i = 0; i<vec.size();i++){
+              	if(j==0){
+       		 		file.resize(i+1);      
+       		 		} 
               		file[i].push_back(std::stod(vec[i]));
               }
+              j=1;
       }
       }
       return file;

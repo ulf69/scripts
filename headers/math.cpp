@@ -16,10 +16,88 @@ class stat
 
 public:
 	std::vector<std::vector<double>> data;
-	stat(const std::string& filename,int col)
-	  :	 data(dh::read_multi_col_file(filename, col))
+	stat(const std::string& filename)
+	  :data(dh::read_multi_col_file(filename))
 	{}	
 	
+	 std::vector<double> add_cols(){
+		int siz = data.size();
+		int siz2 = data[0].size();
+		std::vector<double> vec;
+		double sum;
+		for(int j =0;j<siz2;j++){
+		 	 for(int i =1; i<siz;i++){
+				sum +=data[i][j];
+		 	 }	
+	 	 	vec.push_back(sum);
+	 	 	sum=0;
+	 	 	
+	 	 	}
+		return vec;
+	 }
+
+std::pair<std::vector<double>, std::vector<double>> make_bins(double startx, int data_points){
+
+		std::vector<double> vecy;
+		std::vector<double> vecx;
+		int siz =data[0].size(); 
+		int i =0;
+		double sum;
+		while(data[0][i] < startx){
+			vecy.push_back(data[1][i]);
+			vecx.push_back(data[0][i]);
+			i++;
+		}
+		int bin_size = (siz -i )/data_points;
+		for(int j = i+1; j<siz;j++){
+			sum+=data[1][j];
+			if((j-i)%bin_size == 0){
+				vecy.push_back(sum/bin_size);
+				sum=0;
+				vecx.push_back(data[0][j]/2-data[0][j-bin_size]/2+data[0][j-bin_size]);
+				abb::printt(data[0][j]/2-data[0][j-bin_size]/2+data[0][j-bin_size]);
+			}
+		}
+		std::vector<double> vec_out=scale_to_null(vecy);
+	
+		return std::make_pair(vecx, vec_out);
+	 }
+		
+	 
+
+ std::vector<double>	  scale_to_null(std::vector<double> vec){
+	  	int siz=vec.size();
+	 	int start=siz-10;
+	 	
+	 	double sum;
+	 	
+	 	for(int i = start;i<siz-1;i++){
+	 		sum += vec[i];
+	 	}
+	 	sum = sum/9;
+		std::vector<double> vec_out;
+	 	for(int i = 0;i<siz;i++){
+	 		vec_out.push_back(vec[i]-sum);
+	 	}
+	 	return vec_out;
+	 }
+
+	 static std::vector<double> add_vec(std::vector<double> vec1, std::vector<double> vec2){
+		int  vector_size = vec1.size();
+		int vector2_size = vec2.size();
+
+		if(vector_size-vector2_size!=0){
+			std::cout<<"we have got a problem cap"<<'\n';
+			std::cout<<"vectors have differnt sizes"<<'\n';	
+		}
+		std::vector<double> vec;
+	 	for(int i = 0 ; i < vector_size; i++){
+			vec.push_back(vec1[i]+vec2[i]);
+	 	}
+	 	return vec;
+	 }
+
+
 	
 	static double average(const std::vector<double> vec){
 		int n = vec.size();
@@ -119,7 +197,7 @@ std::pair<std::vector<double>, std::vector<double>> function_composition(std::ve
 }
 
 
-static double overlap_hist(std::string hist1, std::string hist2){
+static double  overlap_hist(std::string hist1, std::string hist2){
 
 	auto [x_hist1,y_hist1] 	  = dh::get_x_y(hist1);
 	auto [x_hist2,y_hist2] 	  = dh::get_x_y(hist2);	
