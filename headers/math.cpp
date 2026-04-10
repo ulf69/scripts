@@ -2,6 +2,7 @@
 #define math
 
 #include <vector>
+#include <iostream>
 #include <cmath>
 #include <string>
 #include <iostream>
@@ -263,6 +264,51 @@ static std::pair<std::vector<double>, std::vector<double>> sort_func(std::vector
 		}	
     return std::make_pair(sorted_x, permuted_y);
 }
+void int_split(double start,double middle, double normalization){
+	int siz = data[0].size();
+	double integral1	 = 0;
+	double dx			 = 0;
+	double integral2	 = 0;
+	double integral3	 = 0;
 
+	for(int i = 0; i < siz;i++){
+		if(data[0][i] < start){
+			dx		  = data[0][i+1]-data[0][i];		
+			integral1 += data[1][i]*dx;	
+		}		
+		else if(data[0][i] > start && data[0][i]<middle){
+			dx 	 	   = data[0][i+1]-data[0][i];		
+			integral2 += data[1][i]*dx;	
+		}
+		else if(data[0][i] > middle){
+			dx  	  = data[0][i]-data[0][i-1];		
+			integral3 += data[1][i]*dx;	
+		}
+	}
+integral1 =integral1/(integral1+integral2+integral3)*normalization;
+integral2 =integral2/(integral1+integral2+integral3)*normalization;
+integral3 =integral3/(integral1+integral2+integral3)*normalization;
+
+std::cout<<"first_layer:"<<integral1<<'\n';
+std::cout<<"start:"<<start<<'\n';
+std::cout<<"bulk:"<<integral2<<'\n';
+std::cout<<"middle:"<<middle<<'\n';
+std::cout<<"second layer:"<<integral3<<'\n';
+}
+
+static std::pair<std::vector<double>, std::vector<double>> generate_cou(){
+
+	std::vector<double> cou;
+	std::vector<double> x;
+	double r= 0.9*pow(10,-9);
+	
+	for(int i = 0; i<2000;i++){
+		cou.push_back(( 9*1.6022*pow(10,-19)*1.6022*pow(10,-19)*6.022*pow(10,23))/(4*3.14*8.854*pow(10,-12) *r*1000)  );
+		x.push_back(r*pow(10,9));
+		r +=0.1*pow(10,-11); 
+	}
+	return std::make_pair(x, cou);
+
+}
 };
 #endif
