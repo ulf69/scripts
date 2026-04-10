@@ -270,24 +270,28 @@ void int_split(double start,double middle, double normalization){
 	double dx			 = 0;
 	double integral2	 = 0;
 	double integral3	 = 0;
+	double sum	 = 0;
 
 	for(int i = 0; i < siz;i++){
 		if(data[0][i] < start){
 			dx		  = data[0][i+1]-data[0][i];		
 			integral1 += data[1][i]*dx;	
-		}		
+			sum		 += data[1][i]*dx;
+ 		}		
 		else if(data[0][i] > start && data[0][i]<middle){
 			dx 	 	   = data[0][i+1]-data[0][i];		
-			integral2 += data[1][i]*dx;	
+			integral2 += data[1][i]*dx;
+			sum		 += data[1][i]*dx;	
 		}
 		else if(data[0][i] > middle){
 			dx  	  = data[0][i]-data[0][i-1];		
 			integral3 += data[1][i]*dx;	
+			sum		 += data[1][i]*dx;
 		}
 	}
-integral1 =integral1/(integral1+integral2+integral3)*normalization;
-integral2 =integral2/(integral1+integral2+integral3)*normalization;
-integral3 =integral3/(integral1+integral2+integral3)*normalization;
+integral1 =integral1/(sum)*normalization;
+integral2 =integral2/(sum)*normalization;
+integral3 =integral3/(sum)*normalization;
 
 std::cout<<"first_layer:"<<integral1<<'\n';
 std::cout<<"start:"<<start<<'\n';
