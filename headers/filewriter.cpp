@@ -27,7 +27,11 @@ void append_y_x(double fx, double x, std::string filename){
 	outfile<<x<<'\t'<<fx<<'\n';
     outfile.close();
 }
-
+void append_string(std::string str1,std::string str2,std::string filename){
+    std::ofstream outfile(filename, std::ios::app);	
+	outfile<<str1<<'\t'<<str2<<'\n';
+    outfile.close();
+}
 void append_y_x_errors(double fx, double dfx, double x, double dx,  std::string filename){
 		std::ofstream outfile(filename, std::ios::app);	
 		outfile<<x<<'\t'<<dx<<'\t'<<fx<<'\t'<<dfx<<'\n';

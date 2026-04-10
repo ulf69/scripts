@@ -55,7 +55,6 @@ std::pair<std::vector<double>, std::vector<double>> make_bins(double startx, int
 				vecy.push_back(sum/bin_size);
 				sum=0;
 				vecx.push_back(data[0][j]/2-data[0][j-bin_size]/2+data[0][j-bin_size]);
-				abb::printt(data[0][j]/2-data[0][j-bin_size]/2+data[0][j-bin_size]);
 			}
 		}
 		std::vector<double> vec_out=scale_to_null(vecy);
@@ -226,7 +225,7 @@ static double  overlap_hist(std::string hist1, std::string hist2){
 	return 2*overlap_area/(normalization_area);
 }
 
-static std::vector<double> vec_subtraction(std::vector<double> vec1, std::vector<double> vec2){
+static std::vector<double> vec_sub(std::vector<double> vec1, std::vector<double> vec2){
 	int vector_size=vec1.size();
 	int vector1_size=vec2.size();
 	std::vector<double> vec_out;

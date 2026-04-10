@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <fstream>
+#include "filewriter.cpp"
 #include <vector>
 #include <iostream>
 namespace dh{
@@ -83,14 +84,24 @@ std::vector<std::vector<double>> read_multi_col_file(std::string in_file){
        }
        
        else{
-     
+     		
                std::vector<std::string> vec = iss(line);
                
               for(int i = 0; i<vec.size();i++){
+              	
               	if(j==0){
        		 		file.resize(i+1);      
        		 		} 
-              		file[i].push_back(std::stod(vec[i]));
+       		 		try
+       		 		{
+              			file [i].push_back(std::stod(vec[i]));
+              		} catch(const std::exception& e)
+              		{
+              			std::cout<<vec[i]<<'\n';
+              			file [i].push_back(0);
+              			fw::append_string(in_file,vec[i],"wtf.xvg");
+              		}
+              			
               }
               j=1;
       }
