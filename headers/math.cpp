@@ -300,19 +300,29 @@ std::cout<<"middle:"<<middle<<'\n';
 std::cout<<"second layer:"<<integral3<<'\n';
 }
 
-static std::pair<std::vector<double>, std::vector<double>> generate_cou(){
+
+ std::pair<std::vector<double>, std::vector<double>> generate_cou(){
 
 	std::vector<double> cou;
 	std::vector<double> x;
-	double r= 0.9*pow(10,-9);
+	int siz = data[0].size();	
 	
-	for(int i = 0; i<2000;i++){
-		cou.push_back(( 9*1.6022*pow(10,-19)*1.6022*pow(10,-19)*6.022*pow(10,23))/(4*3.14*8.854*pow(10,-12) *r*1000)  );
-		x.push_back(r*pow(10,9));
-		r +=0.1*pow(10,-11); 
+	for(int i = 0; i<siz;i++){
+		cou.push_back(( 9*1.6022*pow(10,-19)*1.6022*pow(10,-19)*6.022*pow(10,23))/(4*3.14*8.854*pow(10,-12) *data[0][i]*1000*pow(10,-9))  );
+	
 	}
-	return std::make_pair(x, cou);
+	return std::make_pair(data[0], cou);
 
 }
+std::vector<double> correct_pmf(){
+	std::vector<double> vec;
+	int siz = data[0].size();
+	for(int i = 0; i < siz;i++){
+		vec.push_back(data[1][i]-2*std::log(data[0][1]));
+	}
+	 std::vector<double> out = scale_to_null(vec);
+	return out;
+}
+
 };
 #endif
