@@ -79,7 +79,7 @@ std::vector<std::vector<double>> read_multi_col_file(std::string in_file){
     int j = 0;   
     while (std::getline(infile, line)){ //fill vector line per line
     	
-       if(line.substr(0,1) == "#" || line.substr(0,1) == "@" ){
+       if(line.substr(0,1) == "#" || line.substr(0,1) == "@" || line.substr(0,1) == "&"){
                continue;
        }
        

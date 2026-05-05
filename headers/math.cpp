@@ -2,6 +2,7 @@
 #define math
 
 #include <vector>
+#include <tuple>
 #include <iostream>
 #include <cmath>
 #include <string>
@@ -37,44 +38,56 @@ public:
 		return vec;
 	 }
 
-std::pair<std::vector<double>, std::vector<double>> make_bins(double startx, int data_points){
+std::tuple<std::vector<double>, std::vector<double>, std::vector<double>> make_bins(double startx, int data_points){
 
 		std::vector<double> vecy;
 		std::vector<double> vecx;
+		std::vector<double> error;
+		std::vector<double> averages;
+	
 		int siz =data[0].size(); 
 		int i =0;
 		double sum;
 		while(data[0][i] < startx){
 			vecy.push_back(data[1][i]);
 			vecx.push_back(data[0][i]);
+			error.push_back(data[2][i]);
 			i++;
+				if(i==siz){
+				i = i -1 ;
+				break;
+				}
+
 		}
 		int bin_size = (siz -i )/data_points;
 		for(int j = i+1; j<siz;j++){
 			sum+=data[1][j];
+			averages.push_back(data[1][j]);
 			if((j-i)%bin_size == 0){
 				vecy.push_back(sum/bin_size);
 				sum=0;
 				vecx.push_back(data[0][j]/2-data[0][j-bin_size]/2+data[0][j-bin_size]);
+				error.push_back(sem(averages));
+				averages.clear();
 			}
 		}
 		std::vector<double> vec_out=scale_to_null(vecy);
 	
-		return std::make_pair(vecx, vec_out);
+		return {vecx, vec_out,error};
 	 }
 		
 	 
 
  std::vector<double>	  scale_to_null(std::vector<double> vec){
 	  	int siz=vec.size();
-	 	int start=siz-10;
+	 	int start=siz-4;
 	 	
 	 	double sum;
 	 	
-	 	for(int i = start;i<siz-1;i++){
+	 	for(int i = start;i<siz-2;i++){
 	 		sum += vec[i];
 	 	}
-	 	sum = sum/9;
+	 	sum = sum/3;
 		std::vector<double> vec_out;
 	 	for(int i = 0;i<siz;i++){
 	 		vec_out.push_back(vec[i]-sum);
@@ -324,5 +337,97 @@ std::vector<double> correct_pmf(){
 	return out;
 }
 
+
+ static std::pair<std::vector<double>, std::vector<double>> generate_dummy(){
+
+	std::vector<double> x;
+	std::vector<double> y;
+	double start = 0;
+	double end= 0.01;
+	double step = 1000 ;
+	for(int i = 0; i<step;i++){
+		x.push_back((end-start)/step*i);
+		y.push_back(0);
+		
+	}
+	return std::make_pair(x, y);
+
+}
+
+double tau(){
+	int siz= data[0].size();
+	double tau = 0;
+	for(int i = 0; i< siz;i++){
+		double bin = data[0][i+1]- data[0][i];
+		tau += data[1][i]*bin;
+		if(data[1][i]<0){
+			break;
+			
+		}
+	}
+	return tau;
+	}
+
+std::vector<double> delta_count(std::vector<double> vec){
+int siz = vec.size();
+std::vector<double> list;
+int sum = 0;	
+for(int i = 0; i < siz; i++){
+	if(i == 0){
+	continue;
+	}
+	else if(vec[i] == vec[i-1]){
+		sum +=vec[i];
+	}
+	else if(vec[i] !=vec[i-1]){
+		sum +=vec[i];
+		list.push_back(sum);
+		sum =0;
+	}
+}
+return list;
+}
+
+
+std::vector<double> acf(std::vector<double> vec){
+	int siz = data[0].size();
+	std::vector<double> acf;
+	double sum;
+	for(int i =0;i<siz-1000;i++){
+		for(int j =0; j < siz-1000-i; j++){
+			sum += vec[j]*vec[j+i];
+		}		
+		acf.push_back(sum);
+		sum =0;
+	}
+	
+	double scale = acf[0];
+	
+	for(int i = 0; i < acf.size();i++){
+		acf[i]=acf[i]/scale;
+	}
+	
+	return acf;
+	
+}
+//std::vector<double> scale(std::vecto)
+
+
+
+std::vector<std::vector<double>> all_acf(){
+
+std::vector<std::vector<double>> vec;
+
+	for(int i = 0; i < data.size(); i++){
+	abb::printt("Keggin ion:");
+	abb::print(i);
+			vec.push_back(acf(data[i]));
+	}
+	
+	return vec;
+}
+
 };
+
+
 #endif

@@ -17,8 +17,27 @@ void write_y_x_file(std::vector<double> y, std::vector<double> x, std::string fi
     outfile.close();
 }
 
+void write_y_x_dy_file(std::vector<double> y, std::vector<double> x,std::vector<double> dy, std::string filename){
+    std::ofstream outfile(filename, std::ios::app);	
+	int vec_size=y.size();
+	for(int i = 0; i < vec_size; i++){
+		outfile<<x[i]<<'\t'<<y[i]<<'\t'<<dy[i]<<'\n';
+	}
+    outfile.close();
+}
 
+void write_vec_vec(std::vector<std::vector<double>> vec, std::string outfilename){
+	std::ofstream outfile(outfilename, std::ios::app);	
+	int siz=vec.size();
+	int siz2=vec[0].size();
 
+	for(int j = 0; j < siz2; j++){
+		for(int i = 0; i < siz; i++ ){
+			outfile<<vec[i][j]<<'\t';
+		}
+		outfile<<'\n';
+	}
+}
 
 
 
@@ -71,5 +90,10 @@ void write_subvectors(std::vector<double> sorted_gy, std::vector<double> permute
 		}	
 }
 
+	
 }
+
+
+
+
 #endif

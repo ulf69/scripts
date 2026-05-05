@@ -112,5 +112,5 @@ with open(file1, "w") as f1:
     np.savetxt(f1, np.column_stack([radii ,rdf_2])  , header="r_xy[nm] g_xy(r)")
 
 
-# np.savetxt("rdf/22monolayer1" + outfilename + ".xvg", np.column_stack([radii ,rdf])  , header="r_xy[nm] g_xy(r)")
+#np.savetxt("rdf/22monolayer1" + outfilename + ".xvg", np.column_stack([radii ,rdf])  , header="r_xy[nm] g_xy(r)")
 #np.savetxt("rdf/22monolayer1" + outfilename + ".xvg", np.column_stack([radii ,rdf_2]), header="r_xy[nm] g_xy(r)")
